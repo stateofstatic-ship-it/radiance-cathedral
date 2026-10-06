@@ -1,61 +1,142 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Radiance Cathedral Benchmarks</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Cinzel:wght@600;800&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Cinzel:wght@600;700;800&display=swap">
 <style>
-/* Layout: nave of a cathedral — sunburst title, reliquary plaques, then stained-glass charts in arched windows, ending in the confessional. Single committed look. */
+/* Layout: the nave of a cathedral. Haloed title, reliquary plaques, the conditions of the rite,
+   stained-glass charts set in arched windows, and the confessional at the end. One committed look. */
 :root{
-  --bg:#1a0610; --nave:#2b0a1a; --window:#12061f; --gold:#f5c542; --gold2:#b8860b; --ink:#fbefd5; --muted:#e6cfa8;
-  --rad:#ffd75e; --dep:#5b8bd9; --ruby:#c2185b; --lead:#0b0410;
-  --f-display:"UnifrakturMaguntia","Old English Text MT",serif; --f-caps:"Cinzel","Trajan Pro",Georgia,serif; --f-body:"Cormorant Garamond",Garamond,Georgia,serif;
+  --bg:#1a0610; --window:#12061f; --gold:#f5c542; --gold2:#b8860b; --pale:#fff2b0; --ink:#fbefd5; --muted:#e6cfa8; --dim:#cdb28c;
+  --rad:#ffd75e; --dep:#5b8bd9; --dep-ink:#8fb3ff; --ruby:#c2185b; --lead:#0b0410; --rule:rgba(184,134,11,.32);
+  --f-display:"UnifrakturMaguntia","Old English Text MT",serif;
+  --f-caps:"Cinzel","Trajan Pro",Georgia,serif;
+  --f-body:"Cormorant Garamond",Garamond,Georgia,serif;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font:500 18px/1.5 var(--f-body);padding-inline:16px;padding-block:24px 56px;
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--bg)}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font:500 1.125rem/1.55 var(--f-body);
+  padding:28px max(16px,env(safe-area-inset-right)) calc(56px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
   background-image:repeating-conic-gradient(from 0deg at 50% 0%,rgba(245,197,66,.07) 0 4deg,transparent 4deg 12deg),radial-gradient(ellipse at 50% 0%,rgba(194,24,91,.35),transparent 60%)}
-.wrap{max-width:1100px;margin:0 auto;display:grid;gap:30px}
-header{text-align:center;display:grid;gap:10px;justify-items:center;padding-top:10px}
-.halo{width:min(340px,80vw);aspect-ratio:3/1;border-radius:50%;border:5px solid var(--gold);box-shadow:0 0 30px var(--gold),inset 0 0 22px var(--gold);margin-bottom:-36px;animation:glow 3s ease-in-out infinite}
-h1{font:400 clamp(3rem,11vw,7rem)/1 var(--f-display);margin:0;color:var(--gold);
+:focus-visible{outline:3px solid var(--pale);outline-offset:3px}
+.wrap{max-width:1100px;margin:0 auto;display:grid;gap:clamp(28px,5vw,40px)}
+
+/* ---------- Title and halo ---------- */
+header{display:grid;justify-items:center;text-align:center;gap:14px}
+.title{position:relative;font-size:clamp(3.6rem,17vw,7.25rem);line-height:1;padding-top:.64em}
+.halo{position:absolute;left:50%;top:.07em;width:2.15em;height:.4em;border-radius:50%;
+  border:.042em solid var(--gold);border-top-width:.026em;border-bottom-width:.066em;
+  transform:translateX(-50%) rotate(-5deg);
+  box-shadow:0 0 .16em rgba(245,197,66,.85),inset 0 0 .1em rgba(245,197,66,.7);
+  animation:glow 3.2s ease-in-out infinite}
+h1{font:400 1em/1 var(--f-display);margin:0;color:var(--gold);
   background:linear-gradient(180deg,#fff6c9,#f5c542 45%,#b8860b);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 0 18px rgba(245,197,66,.55))}
-.motto{font:600 clamp(.8rem,2.2vw,1.05rem)/1.4 var(--f-caps);letter-spacing:.22em;color:var(--muted);margin:0;text-wrap:balance}
-.sub{max-width:62ch;margin:0;color:var(--muted);font-style:italic}
-button.choir{font:700 .95rem var(--f-caps);letter-spacing:.12em;color:#1a0610;background:linear-gradient(180deg,#fff2b0,#f5c542 50%,#b8860b);border:3px solid #fff2b0;border-radius:999px;padding:10px 22px;cursor:pointer;box-shadow:0 0 18px rgba(245,197,66,.6)}
-button.choir:focus-visible{outline:3px solid var(--ruby);outline-offset:3px}
-.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.chip{font:600 .72rem/1.2 var(--f-caps);letter-spacing:.08em;padding:7px 12px;border:1.5px solid var(--gold2);border-radius:4px;background:rgba(43,10,26,.8);max-width:100%;overflow-wrap:anywhere}
-.relics{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
-.relic{min-width:0;background:linear-gradient(180deg,#3a0d22,#22071a);border:3px solid var(--gold);border-radius:110px 110px 10px 10px;padding:34px 16px 18px;text-align:center;
-  box-shadow:0 0 0 6px var(--lead),0 0 0 8px var(--gold2),0 0 26px rgba(245,197,66,.35);display:grid;gap:6px;align-content:start}
-.relic .lab{font:600 .72rem/1.35 var(--f-caps);letter-spacing:.12em;color:var(--muted);overflow-wrap:anywhere}
-.relic .big{font:800 clamp(1.7rem,3.4vw,2.3rem)/1.1 var(--f-caps);color:var(--gold);font-variant-numeric:tabular-nums;text-shadow:0 0 14px rgba(245,197,66,.6)}
-.relic .big small{font:700 .9rem var(--f-body);color:var(--ink)}
-.relic .vs{font-size:.95rem;color:var(--muted);overflow-wrap:anywhere}
-.relic .x{justify-self:center;font:700 .78rem/1.3 var(--f-caps);letter-spacing:.06em;color:#1a0610;background:var(--gold);padding:4px 10px;border-radius:3px;max-width:100%}
-.window{min-width:0;background:var(--window);border:4px solid var(--gold2);border-radius:220px 220px 14px 14px;padding:48px 22px 22px;display:grid;gap:10px;
-  box-shadow:0 0 0 8px var(--lead),0 0 40px rgba(194,24,91,.35)}
-h2{font:400 clamp(1.7rem,4.5vw,2.6rem)/1.1 var(--f-display);margin:0;color:var(--gold);text-align:center;text-wrap:balance}
-.note{margin:0 auto;max-width:70ch;color:var(--muted);text-align:center;font-size:1rem}
-.legend{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;font:600 .78rem var(--f-caps);letter-spacing:.06em}
-.sw{width:12px;height:12px;display:inline-block;margin-right:6px;vertical-align:-1px;border:1px solid var(--lead)}
-.chart{overflow-x:auto}
-.chart svg{display:block;width:100%;min-width:600px;height:auto}
-table{border-collapse:collapse;width:100%;min-width:540px;font-variant-numeric:tabular-nums;font-size:1rem}
-th,td{padding:7px 10px;text-align:right;border-bottom:1px solid rgba(184,134,11,.35)}
-th:first-child,td:first-child{text-align:left}
-th{font:600 .72rem var(--f-caps);letter-spacing:.08em;color:var(--gold)}
-.confess{border:3px double var(--gold);background:#120309;padding:22px;border-radius:8px;display:grid;gap:10px}
-.confess ul{margin:0;padding-left:22px;display:grid;gap:6px;color:var(--muted)}
-code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;color:var(--ink);overflow-wrap:anywhere}
-@keyframes glow{0%,100%{box-shadow:0 0 22px var(--gold),inset 0 0 16px var(--gold)}50%{box-shadow:0 0 44px var(--gold),inset 0 0 28px var(--gold)}}
-@keyframes flick{0%,100%{opacity:1}50%{opacity:.55}}
+  filter:drop-shadow(0 0 .14em rgba(245,197,66,.5))}
+.motto{font:600 clamp(.72rem,2.3vw,.95rem)/1.6 var(--f-caps);letter-spacing:.2em;color:var(--muted);margin:0;text-wrap:balance;max-width:48em}
+.sub{max-width:58ch;margin:0;color:var(--muted);font-style:italic;text-wrap:pretty}
+
+/* ---------- The choir: one button, one line beneath it ---------- */
+.choir-box{display:grid;justify-items:center;gap:8px;margin-top:4px}
+button.choir{font:700 .9rem/1 var(--f-caps);letter-spacing:.12em;color:#1a0610;background:linear-gradient(180deg,#fff2b0,#f5c542 50%,#b8860b);
+  border:2px solid var(--pale);border-radius:999px;padding:12px 24px;cursor:pointer;box-shadow:0 0 14px rgba(245,197,66,.45);min-height:44px}
+button.choir:focus-visible{outline:3px solid var(--pale);outline-offset:4px}
+button.choir.await{animation:pulse 2.4s ease-in-out infinite}
+.awaits{margin:0;font:600 .7rem/1.4 var(--f-caps);letter-spacing:.16em;color:var(--gold);min-height:1.4em}
+.awaits.off{visibility:hidden}
+
+/* ---------- Reliquary plaques ---------- */
+.relics{--g:12px;display:flex;flex-wrap:wrap;justify-content:center;gap:var(--g)}
+.relic{--arch:clamp(44px,12vw,68px);flex:0 0 calc((100% - var(--g))/2);min-width:0;position:relative;
+  display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;
+  padding:calc(var(--arch)*.66) 10px 14px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(245,197,66,.16),transparent 55%),linear-gradient(180deg,#3d0e25,#22071a 75%);
+  border:2px solid var(--gold);border-radius:50% 50% 10px 10px / var(--arch) var(--arch) 10px 10px;
+  box-shadow:inset 0 0 0 4px #24071a,inset 0 0 0 5px rgba(245,197,66,.42),0 0 18px rgba(245,197,66,.2)}
+.relic::before{content:"";position:absolute;left:50%;top:calc(var(--arch)*.17);width:10px;height:14px;transform:translateX(-50%);
+  background:linear-gradient(var(--gold),var(--gold)) 50% 0/2px 100% no-repeat,linear-gradient(var(--gold),var(--gold)) 50% 30%/10px 2px no-repeat}
+.relic .lab{font:600 .64rem/1.35 var(--f-caps);letter-spacing:.1em;color:var(--muted);text-wrap:balance}
+.relic .big{font:800 clamp(1.5rem,6.2vw,2.05rem)/1.1 var(--f-caps);color:var(--gold);font-variant-numeric:tabular-nums;text-shadow:0 0 12px rgba(245,197,66,.5);white-space:nowrap}
+.relic .big small{font:700 .8rem var(--f-body);color:var(--ink);margin-left:.3em;text-shadow:none}
+.relic .vs{font-size:.92rem;line-height:1.25;color:var(--muted);margin-bottom:6px}
+.relic .x{margin-top:auto;font:700 .66rem/1.3 var(--f-caps);letter-spacing:.06em;color:#1a0610;background:var(--gold);padding:5px 9px;border-radius:3px;text-wrap:balance;max-width:100%}
+@media (min-width:640px){.relics{--g:16px}.relic{flex-basis:calc((100% - 2*var(--g))/3);padding-inline:14px}.relic .lab{font-size:.7rem}.relic .x{font-size:.7rem}}
+@media (min-width:1000px){.relic{flex-basis:calc((100% - 4*var(--g))/5)}}
+
+/* ---------- Conditions of the rite ---------- */
+.rite{border:1px solid var(--rule);border-radius:10px;background:rgba(18,3,9,.72);padding:16px clamp(14px,3vw,28px) 10px}
+.rite-h{margin:0 0 6px;text-align:center;font:600 .7rem/1.4 var(--f-caps);letter-spacing:.24em;color:var(--gold)}
+.specs{margin:0;display:grid;grid-template-columns:1fr;column-gap:40px}
+.specs>div{display:grid;grid-template-columns:6.4rem 1fr;gap:12px;align-items:baseline;padding:9px 0;border-top:1px solid var(--rule)}
+.specs>div:first-child{border-top:0}
+.specs dt{font:600 .66rem/1.3 var(--f-caps);letter-spacing:.14em;color:var(--gold)}
+.nw{white-space:nowrap}
+.specs dd{margin:0;font-size:1.02rem;line-height:1.35;color:var(--ink);overflow-wrap:anywhere}
+@media (min-width:760px){.specs{grid-template-columns:1fr 1fr}.specs>div:nth-child(2){border-top:0}}
+@media (max-width:400px){.specs>div{grid-template-columns:5.6rem 1fr}}
+
+/* ---------- Stained-glass windows ---------- */
+.window{--warch:clamp(56px,15vw,170px);min-width:0;display:grid;gap:12px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(194,24,91,.2),transparent 60%),var(--window);
+  border:3px solid var(--gold2);border-radius:50% 50% 14px 14px / var(--warch) var(--warch) 14px 14px;
+  padding:calc(var(--warch)*.48) clamp(14px,3vw,30px) clamp(18px,3vw,28px);
+  box-shadow:0 0 0 clamp(3px,.8vw,7px) var(--lead),0 0 36px rgba(194,24,91,.3)}
+h2{font:400 clamp(1.75rem,4.6vw,2.6rem)/1.12 var(--f-display);margin:0;color:var(--gold);text-align:center;text-wrap:balance}
+.note{margin:0 auto;max-width:64ch;color:var(--muted);text-align:center;font-size:1rem;line-height:1.5;text-wrap:pretty}
+.legend{display:flex;flex-wrap:wrap;gap:6px 22px;justify-content:center;font:600 .72rem/1.4 var(--f-caps);letter-spacing:.08em;color:var(--ink)}
+.legend>span{display:inline-flex;align-items:center;gap:8px}
+.sw{width:10px;height:15px;border-radius:5px 5px 1px 1px;border:1px solid var(--lead);flex:none}
+.chart{min-width:0}
+.chart svg{display:block;width:100%;height:auto}
+.chart text{font-family:var(--f-caps);font-weight:600;font-size:12px}
+.chart .cap{font-size:11px;letter-spacing:.14em;fill:var(--gold)}
+.chart .tk{font-size:11px;fill:var(--dim)}
+.chart .vr{font-size:13px;fill:var(--ink)}
+.chart .va{font-size:13px;fill:var(--muted)}
+.chart .vin{font-size:12px;fill:#1a0610}
+.chart .vout{font-size:12px;fill:var(--ink)}
+.chart .ko{paint-order:stroke;stroke:var(--window);stroke-width:5px;stroke-linejoin:round}
+.chart .cat{font-family:var(--f-body);font-weight:700;font-size:17px;fill:var(--ink)}
+.chart .catn{font-family:var(--f-body);font-weight:700;font-size:16px;fill:var(--ink)}
+.chart .sub{font-family:var(--f-body);font-style:italic;font-weight:500;font-size:14px;fill:var(--muted)}
+.chart .rl{font-size:12px}
+.chart .grid{stroke:#3a1730;stroke-width:1.5}
+.chart .axis{stroke:var(--gold);stroke-width:2}
+.chart .ref{stroke-width:2.5;stroke-dasharray:8 6}
+.chart .lead{stroke:var(--lead);stroke-width:2}
 .flk{animation:flick 1.3s ease-in-out infinite}
-@media (prefers-reduced-motion:reduce){*{animation:none!important}}
-.hint{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom));z-index:10;max-width:calc(100vw - 32px - env(safe-area-inset-left) - env(safe-area-inset-right));
-  font:600 .8rem/1.3 var(--f-caps);letter-spacing:.1em;color:#1a0610;background:var(--gold);border:2px solid #fff2b0;border-radius:999px;padding:8px 18px;text-align:center;box-shadow:0 0 18px rgba(245,197,66,.6);pointer-events:none}
-.hint[hidden]{display:none}
-html.thumb .sub,html.thumb button.choir,html.thumb .hint{display:none}
-body{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-bottom:calc(56px + env(safe-area-inset-bottom))}
+
+/* ---------- Tables ---------- */
+.tbl{min-width:0}
+.tbl table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums lining-nums;font-size:1.02rem;line-height:1.3}
+#t-ttft{max-width:780px;margin:0 auto}
+.tbl th,.tbl td{padding:8px 8px;text-align:right;border-bottom:1px solid var(--rule)}
+.tbl th:first-child,.tbl td:first-child{text-align:left;padding-left:2px}
+.tbl th:last-child,.tbl td:last-child{padding-right:2px}
+.tbl th{font:600 .66rem/1.35 var(--f-caps);letter-spacing:.08em;color:var(--gold);vertical-align:bottom}
+.tbl th.r{color:var(--rad)} .tbl th.a{color:var(--dep-ink)}
+.tbl caption{caption-side:top;text-align:left;font:600 .66rem/1.4 var(--f-caps);letter-spacing:.14em;color:var(--muted);padding:0 2px 4px}
+.tbl tbody tr:last-child td{border-bottom:0}
+.hs,.tbl-narrow,.cap-n{display:none}
+@media (max-width:699px){
+  .window{padding-top:calc(var(--warch)*.62)}
+  .tbl-wide{display:none}.tbl-narrow{display:grid;gap:18px}
+  .hl{display:none}.hs{display:inline}.cap-n{display:table-caption}
+}
+
+/* ---------- Confessional ---------- */
+.confess{border:3px double var(--gold);background:#120309;padding:clamp(18px,3vw,26px);border-radius:8px;display:grid;gap:12px}
+.confess ul{margin:0;padding-left:20px;display:grid;gap:8px;color:var(--muted)}
+.confess li::marker{color:var(--gold)}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.82em;color:var(--ink);overflow-wrap:anywhere}
+.raw{margin:4px 0 0;padding-top:12px;border-top:1px solid var(--rule);font:.8rem/1.5 ui-monospace,Menlo,monospace;color:var(--dim);overflow-wrap:anywhere}
+
+@keyframes glow{0%,100%{box-shadow:0 0 .12em rgba(245,197,66,.7),inset 0 0 .07em rgba(245,197,66,.6)}50%{box-shadow:0 0 .26em rgba(245,197,66,1),inset 0 0 .13em rgba(245,197,66,.9)}}
+@keyframes flick{0%,100%{opacity:1}50%{opacity:.55}}
+@keyframes pulse{0%,100%{box-shadow:0 0 10px rgba(245,197,66,.45),0 0 0 0 rgba(245,197,66,.5)}50%{box-shadow:0 0 26px rgba(245,197,66,.95),0 0 0 7px rgba(245,197,66,0)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+html.thumb .sub,html.thumb .choir-box,html.thumb .rite,html.thumb .window,html.thumb .confess{display:none}
+html.thumb body{padding-top:62px}
+html.thumb .wrap{gap:44px}
 </style>
 <meta name="description" content="Radiance 1.0.13 vs our vLLM fork on 2× R9700: 1.69× decode, 3.5× faster first token, 4.5× at 8 concurrent (BetterBench quick)">
 <meta property="og:type" content="website">
@@ -70,51 +151,73 @@ body{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env
 <meta name="twitter:description" content="Radiance 1.0.13 vs our vLLM fork on 2× R9700: 1.69× decode, 3.5× faster first token, 4.5× at 8 concurrent (BetterBench quick)">
 <meta name="twitter:image" content="https://stateofstatic-ship-it.github.io/radiance-cathedral/radiance-thumb.png">
 </head><body>
+<script>if(location.hash==='#thumb')document.documentElement.classList.add('thumb');</script>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <linearGradient id="glassR" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fff2b0"/><stop offset=".35" stop-color="#ffd75e"/><stop offset=".7" stop-color="#e0a020"/><stop offset="1" stop-color="#c2185b"/></linearGradient>
+  <linearGradient id="glassA" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#a9c8ff"/><stop offset=".5" stop-color="#5b8bd9"/><stop offset="1" stop-color="#2a3f8f"/></linearGradient>
+  <linearGradient id="glassRh" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#c2185b"/><stop offset=".3" stop-color="#e0a020"/><stop offset=".62" stop-color="#ffd75e"/><stop offset="1" stop-color="#fff2b0"/></linearGradient>
+  <linearGradient id="glassAh" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#2a3f8f"/><stop offset=".45" stop-color="#5b8bd9"/><stop offset="1" stop-color="#a9c8ff"/></linearGradient>
+  <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs></svg>
 
-<div class="wrap">
+<main class="wrap">
   <header>
-    <div class="halo" aria-hidden="true"></div>
-    <h1>Radiance</h1>
+    <div class="title"><span class="halo" aria-hidden="true"></span><h1>Radiance</h1></div>
     <p class="motto">FIAT LUX · FIAT TOKENS · GLORIA IN EXCELSIS DECODE</p>
     <p class="sub">On the sixth day of October, on one rig, one boot and one harness, the engine of light was set against our deployed vLLM fork. BetterBench 0.6.0, quick mode, thinking ON.</p>
-    <button class="choir" id="choir" type="button" aria-pressed="false">♱ Summon the choir</button>
-    <div class="chips">
-      <span class="chip">Radiance 1.0.13 · uncensored Flash-Next .rad</span><span class="chip">vs q38fn-gptq-kvram16u97 (vLLM 29.07.2)</span>
-      <span class="chip">TP 2 × R9700</span><span class="chip">DDR5 5000 MT/s · 192 GB</span><span class="chip">5 passes per category</span>
-      <span class="chip">temp 0.7</span><span class="chip">cold prefix cache</span><span class="chip">290 of 290 requests answered, both</span>
+    <div class="choir-box">
+      <button class="choir" id="choir" type="button" aria-pressed="false">♱ Summon the choir</button>
+      <p class="awaits off" id="choir-hint" role="status" aria-hidden="true">Tap anywhere — the choir awaits</p>
     </div>
   </header>
 
   <section class="relics" id="relics" aria-label="Headline numbers"></section>
 
-  <section class="window">
-    <h2>The Decoding of the Categories</h2>
+  <section class="rite" aria-labelledby="rite-h">
+    <p class="rite-h" id="rite-h">✠ Conditions of the rite ✠</p>
+    <dl class="specs">
+      <div><dt>Contender</dt><dd>Radiance 1.0.13 · uncensored Flash-Next .rad</dd></div>
+      <div><dt>Versus</dt><dd>q38fn-gptq-kvram16u97 <span class="nw">(vLLM 29.07.2)</span></dd></div>
+      <div><dt>Cards</dt><dd>TP 2 × R9700</dd></div>
+      <div><dt>Memory</dt><dd>DDR5 5000 MT/s · 192 GB</dd></div>
+      <div><dt>Passes</dt><dd>5 passes per category</dd></div>
+      <div><dt>Sampling</dt><dd>temp 0.7</dd></div>
+      <div><dt>Cache</dt><dd>cold prefix cache</dd></div>
+      <div><dt>Answered</dt><dd>290 of 290 requests answered, both engines</dd></div>
+    </dl>
+  </section>
+
+  <section class="window" aria-labelledby="h-decode">
+    <h2 id="h-decode">The Decoding of the Categories</h2>
     <p class="note">Median decode tokens per second at batch 1, five passes each. Dashed lines mark each engine's weighted combined score.</p>
     <div class="legend"><span><span class="sw" style="background:var(--rad)"></span>Radiance 1.0.13, haloed</span><span><span class="sw" style="background:var(--dep)"></span>the deployed engine, candle-lit</span></div>
     <div class="chart" id="c-decode"></div>
   </section>
 
-  <section class="window">
-    <h2>The Multitude Gathered</h2>
+  <section class="window" aria-labelledby="h-conc">
+    <h2 id="h-conc">The Multitude Gathered</h2>
     <p class="note">Aggregate tokens per second with 1, 2, 4 and 8 requests in flight, 48 requests per level. Radiance rises with the crowd. The deployed engine stays flat, its per-request rate falling about as fast as the batch grows.</p>
+    <div class="legend"><span><span class="sw" style="background:var(--rad)"></span>Radiance 1.0.13, haloed</span><span><span class="sw" style="background:var(--dep)"></span>the deployed engine, candle-lit</span></div>
     <div class="chart" id="c-conc"></div>
-    <div class="chart"><table id="t-conc"></table></div>
+    <div class="tbl tbl-wide"><table id="t-conc"></table></div>
+    <div class="tbl tbl-narrow" id="t-conc-n"></div>
   </section>
 
-  <section class="window">
-    <h2>The Reading of the Scrolls</h2>
+  <section class="window" aria-labelledby="h-pre">
+    <h2 id="h-pre">The Reading of the Scrolls</h2>
     <p class="note">Prefill: prompt tokens ÷ time to first token, median of 8 passes, cold cache. Both engines read the identical scrolls. The 64k target is 47,056 tokens.</p>
+    <div class="legend"><span><span class="sw" style="background:var(--rad)"></span>Radiance 1.0.13, haloed</span><span><span class="sw" style="background:var(--dep)"></span>the deployed engine, candle-lit</span></div>
     <div class="chart" id="c-pre"></div>
   </section>
 
-  <section class="window">
-    <h2>The First Word Spoken</h2>
-    <div class="chart"><table id="t-ttft"></table></div>
+  <section class="window" aria-labelledby="h-ttft">
+    <h2 id="h-ttft">The First Word Spoken</h2>
+    <div class="tbl"><table id="t-ttft"></table></div>
   </section>
 
-  <section class="confess">
-    <h2>The Confessional</h2>
+  <section class="confess" aria-labelledby="h-conf">
+    <h2 id="h-conf">The Confessional</h2>
     <ul>
       <li>Quick mode is BetterBench's own "smoke check, not a publishable result": 5 passes per category and one run per engine, deployed engine first.</li>
       <li>The pre-registered rule called for confidence intervals that <code>betterbench run</code> never prints, so the formal verdict is "not separated". The individual runs don't overlap (code: 88–95 vs 141–200 t/s).</li>
@@ -122,14 +225,11 @@ body{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env
       <li>Radiance's <code>--tp-wire wht6</code> link between the cards is lossy above 25 rows, which covers prefill and batched decode. Single-stream decode is exact. It also keeps a 47.68 GiB n-gram table in pinned RAM.</li>
       <li>Answer quality has not been tested yet. That is the next session.</li>
     </ul>
-    <p class="note" style="text-align:left;margin:0">Raw: evidence/raw/radtestS1-bb-{A,B}-20261006T005341Z.json · verdict: radtestS1-VERDICT-20261006T005341Z.md</p>
+    <p class="raw">Raw: evidence/raw/radtestS1-bb-{A,B}-20261006T005341Z.json · verdict: radtestS1-VERDICT-20261006T005341Z.md</p>
   </section>
-</div>
-
-<div class="hint" id="choir-hint" role="status" hidden>Tap anywhere to let the choir sing</div>
+</main>
 
 <script>
-if(location.hash==='#thumb')document.documentElement.classList.add('thumb');
 const C = {
   cats:['chat','code','file edit','json','math','prose','reasoning','summary'],
   R:[152.2,169.8,182.6,202.0,200.2,149.9,147.2,185.3], A:[92.6,93.9,106.2,112.9,121.1,98.8,96.8,108.5],
@@ -147,39 +247,125 @@ const relics=[
   ['Prefill at the 64k target','5,697','t/s','deployed: 4,365 t/s','1.31× faster reading'],
 ];
 document.getElementById('relics').innerHTML=relics.map(r=>`<div class="relic"><div class="lab">${r[0]}</div>
-  <div class="big">${r[1]} <small>${r[2]}</small></div><div class="vs">${r[3]}</div><span class="x">${r[4]}</span></div>`).join('');
+  <div class="big">${r[1]}<small>${r[2]}</small></div><div class="vs">${r[3]}</div><span class="x">${r[4]}</span></div>`).join('');
 
-const DEFS=`<defs><linearGradient id="glassR" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fff2b0"/><stop offset=".35" stop-color="#ffd75e"/><stop offset=".7" stop-color="#e0a020"/><stop offset="1" stop-color="#c2185b"/></linearGradient>
-<linearGradient id="glassA" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#a9c8ff"/><stop offset=".5" stop-color="#5b8bd9"/><stop offset="1" stop-color="#2a3f8f"/></linearGradient>
-<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
-function bars(el,labels,R,A,max,ticks,unit,o={}){
-  const W=1000,H=450,L=70,T=80,B=385,PR=W-150,n=labels.length,gw=(PR-L)/n,bw=Math.min(38,gw*.32),y=v=>B-v*(B-T)/max;
-  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${o.aria}">${DEFS}`;
-  ticks.forEach(t=>{s+=`<line x1="${L}" x2="${PR}" y1="${y(t)}" y2="${y(t)}" stroke="#3a1730" stroke-width="1.5"/>
-    <text x="${L-10}" y="${y(t)+5}" text-anchor="end" fill="#e6cfa8" font-family="Cinzel" font-size="14">${t.toLocaleString('en-US')}</text>`});
-  s+=`<text x="${L}" y="${T-50}" fill="#f5c542" font-family="Cinzel" font-size="14" letter-spacing="2">${unit}</text>`;
-  (o.refs||[]).forEach(([v,c,a,b])=>{s+=`<line x1="${L}" x2="${PR+8}" y1="${y(v)}" y2="${y(v)}" stroke="${c}" stroke-width="2.5" stroke-dasharray="9 7"/>
-    <text x="${PR+14}" y="${y(v)-4}" fill="${c}" font-family="Cinzel" font-size="14">${a}</text><text x="${PR+14}" y="${y(v)+15}" fill="${c}" font-family="Cinzel" font-size="14">${b}</text>`});
-  labels.forEach((lab,i)=>{const cx=L+gw*i+gw/2,xr=cx-bw-3,xa=cx+3,yr=y(R[i]),ya=y(A[i]);
-    s+=`<path d="M${xr} ${B} V${yr+bw/2} a${bw/2} ${bw/2} 0 0 1 ${bw} 0 V${B}Z" fill="url(#glassR)" stroke="#0b0410" stroke-width="3"/>
-      <line x1="${xr}" x2="${xr+bw}" y1="${(yr+B)/2}" y2="${(yr+B)/2}" stroke="#0b0410" stroke-width="2"/>
-      <path d="M${xa} ${B} V${ya+bw/2} a${bw/2} ${bw/2} 0 0 1 ${bw} 0 V${B}Z" fill="url(#glassA)" stroke="#0b0410" stroke-width="3"/>
-      <ellipse cx="${xr+bw/2}" cy="${yr-12}" rx="${bw/2+6}" ry="6" fill="none" stroke="#f5c542" stroke-width="3.5" filter="url(#glow)" class="flk" style="animation-delay:${-i*.17}s"/>
-      <text x="${xr+bw/2}" y="${yr-26}" text-anchor="middle" fill="#fbefd5" stroke="#12061f" stroke-width="5" paint-order="stroke" font-family="Cinzel" font-size="13" font-weight="600">${fmt(R[i],o.d??1)}</text>
-      <rect x="${xa+bw/2-3}" y="${ya-14}" width="6" height="12" fill="#fbefd5"/><ellipse class="flk" cx="${xa+bw/2}" cy="${ya-18}" rx="3" ry="5" fill="#ffb02e"/>
-      <text x="${xa+bw/2}" y="${ya-28}" text-anchor="middle" fill="#e6cfa8" stroke="#12061f" stroke-width="5" paint-order="stroke" font-family="Cinzel" font-size="13">${fmt(A[i],o.d??1)}</text>
-      <text x="${cx}" y="${B+26}" text-anchor="middle" fill="#fbefd5" font-family="Cormorant Garamond" font-size="18" font-weight="700">${lab}</text>`;
-    if(o.sub) s+=`<text x="${cx}" y="${B+46}" text-anchor="middle" fill="#e6cfa8" font-family="Cormorant Garamond" font-size="15" font-style="italic">${o.sub[i]}</text>`;});
-  s+=`<line x1="${L}" x2="${PR}" y1="${B}" y2="${B}" stroke="#f5c542" stroke-width="2"/></svg>`;
-  document.getElementById(el).innerHTML=s;
+/* ---------- Tables ---------- */
+const hd=(long,short,cls='')=>`<th${cls?` class="${cls}"`:''}><span class="hl">${long}</span><span class="hs">${short}</span></th>`;
+document.getElementById('t-conc').innerHTML=`<thead><tr><th>In flight</th><th class="r">Radiance t/s per request</th><th class="a">Deployed t/s per request</th><th class="r">Radiance first token ms</th><th class="a">Deployed first token ms</th></tr></thead><tbody>`+
+  C.lv.map((l,i)=>`<tr><td>${l}</td><td>${fmt(C.prR[i])}</td><td>${fmt(C.prA[i])}</td><td>${fmt(C.ttcR[i])}</td><td>${fmt(C.ttcA[i])}</td></tr>`).join('')+`</tbody>`;
+const mini=(cap,R,A)=>`<table><caption>${cap}</caption><thead><tr><th>In flight</th><th class="r">Radiance</th><th class="a">Deployed</th></tr></thead><tbody>`+
+  C.lv.map((l,i)=>`<tr><td>${l}</td><td>${fmt(R[i])}</td><td>${fmt(A[i])}</td></tr>`).join('')+`</tbody></table>`;
+document.getElementById('t-conc-n').innerHTML=mini('t/s per request',C.prR,C.prA)+mini('First token ms',C.ttcR,C.ttcA);
+document.getElementById('t-ttft').innerHTML=`<caption class="cap-n">First token ms</caption><thead><tr><th>Category</th>${hd('Radiance first token ms','Radiance','r')}${hd('Deployed first token ms','Deployed','a')}<th>Ratio</th></tr></thead><tbody>`+
+  C.cats.map((c,i)=>`<tr><td>${c}</td><td>${fmt(C.ttR[i])}</td><td>${fmt(C.ttA[i])}</td><td>${(C.ttR[i]/C.ttA[i]).toFixed(2)}×</td></tr>`).join('')+`</tbody>`;
+
+/* ---------- Stained-glass charts ----------
+   Wide windows: upright lancets (Radiance haloed, the deployed engine candle-lit).
+   Narrow windows: horizontal bars, one row per category, values written into the glass. */
+const MC=document.createElement('canvas').getContext('2d');
+const FONT={val:'600 13px Cinzel',vin:'600 12px Cinzel',ref:'600 12px Cinzel',tick:'600 11px Cinzel',cat:'700 17px "Cormorant Garamond"',catn:'700 16px "Cormorant Garamond"',sub:'italic 500 14px "Cormorant Garamond"'};
+const tw=(s,f)=>{MC.font=f;return MC.measureText(s).width;};
+const n1=v=>Math.round(v*10)/10;
+const T=(x,y,s,cls,anchor='start',extra='')=>`<text class="${cls}" x="${n1(x)}" y="${n1(y)}" text-anchor="${anchor}"${extra}>${s}</text>`;
+const CHARTS=[
+  {el:'c-decode',labels:C.cats,R:C.R,A:C.A,max:220,ticks:[0,55,110,165,220],unit:'DECODE T/S (MEDIAN)',
+   refs:[{v:169.9,c:'#ffd75e',name:'Radiance',val:'combined 169.9'},{v:100.8,c:'#8fb3ff',name:'deployed',val:'combined 100.8'}],aria:'Decode tokens per second by category'},
+  {el:'c-conc',labels:C.lv.map(l=>`${l} in flight`),R:C.aggR,A:C.aggA,max:500,ticks:[0,125,250,375,500],unit:'AGGREGATE T/S',aria:'Aggregate tokens per second by concurrency'},
+  {el:'c-pre',labels:C.ptok.map(t=>`${t.toLocaleString('en-US')} tok`),R:C.ppR,A:C.ppA,max:6000,ticks:[0,1500,3000,4500,6000],unit:'PREFILL T/S (MEDIAN)',d:0,
+   sub:['~2k target','~8k','~16k','~32k','~64k target'],aria:'Prefill tokens per second by depth'},
+];
+const svgWrap=(W,H,aria,body)=>`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${aria}">${body}</svg>`;
+const refW=c=>(c.refs||[]).reduce((m,r)=>Math.max(m,tw(r.name,FONT.ref),tw(r.val,FONT.ref)),0);
+const wideOK=(c,W)=>(W-52-(c.refs?refW(c)+24:18))/c.labels.length>=76;
+
+function vchart(c,W){
+  const n=c.labels.length,refs=c.refs||[],H=c.sub?458:432,L=52,PR=W-(refs.length?refW(c)+24:18),Tp=62,B=H-(c.sub?68:46);
+  const gw=(PR-L)/n,bw=Math.min(40,gw*.3),gap=Math.max(6,gw*.07),y=v=>B-v*(B-Tp)/c.max;
+  let s=T(L,Tp-36,c.unit,'cap');
+  c.ticks.forEach(t=>{s+=`<line class="grid" x1="${L}" x2="${n1(PR)}" y1="${n1(y(t))}" y2="${n1(y(t))}"/>`+T(L-10,y(t)+4,t.toLocaleString('en-US'),'tk','end');});
+  refs.forEach(r=>{const yy=y(r.v);s+=`<line class="ref ob" x1="${L}" x2="${n1(PR+6)}" y1="${n1(yy)}" y2="${n1(yy)}" stroke="${r.c}"/>`+
+    T(PR+14,yy-5,r.name,'rl','start',` fill="${r.c}"`)+T(PR+14,yy+14,r.val,'rl','start',` fill="${r.c}"`);});
+  c.labels.forEach((lab,i)=>{
+    const cx=L+gw*i+gw/2,xr=cx-gap/2-bw,xa=cx+gap/2,yr=y(c.R[i]),ya=y(c.A[i]),h=bw/2;
+    s+=`<path class="ob" d="M${n1(xr)} ${B}V${n1(yr+h)}a${n1(h)} ${n1(h)} 0 0 1 ${n1(bw)} 0V${B}Z" fill="url(#glassR)" stroke="#0b0410" stroke-width="3"/>`+
+      `<line class="lead" x1="${n1(xr+1.5)}" x2="${n1(xr+bw-1.5)}" y1="${n1((yr+h+B)/2)}" y2="${n1((yr+h+B)/2)}"/>`+
+      `<path class="ob" d="M${n1(xa)} ${B}V${n1(ya+h)}a${n1(h)} ${n1(h)} 0 0 1 ${n1(bw)} 0V${B}Z" fill="url(#glassA)" stroke="#0b0410" stroke-width="3"/>`+
+      `<ellipse class="ob flk" cx="${n1(xr+h)}" cy="${n1(yr-9)}" rx="${n1(h+5)}" ry="4.5" fill="none" stroke="#f5c542" stroke-width="3" filter="url(#glow)" style="animation-delay:${(-i*.17).toFixed(2)}s"/>`+
+      `<rect class="ob" x="${n1(xa+h-3)}" y="${n1(ya-13)}" width="6" height="11" fill="#fbefd5"/><ellipse class="ob flk" cx="${n1(xa+h)}" cy="${n1(ya-17)}" rx="3" ry="5" fill="#ffb02e"/>`+
+      T(xr+h,yr-21,fmt(c.R[i],c.d??1),'vr ko vl','middle')+T(xa+h,ya-28,fmt(c.A[i],c.d??1),'va ko vl','middle')+
+      T(cx,B+26,lab,'cat','middle');
+    if(c.sub) s+=T(cx,B+47,c.sub[i],'sub','middle');
+  });
+  s+=`<line class="axis" x1="${L}" x2="${n1(PR)}" y1="${B}" y2="${B}"/>`;
+  return [H,s];
 }
-bars('c-decode',C.cats,C.R,C.A,220,[0,55,110,165,220],'DECODE T/S (MEDIAN)',{refs:[[169.9,'#ffd75e','Radiance','169.9'],[100.8,'#8fb3ff','deployed','100.8']],aria:'Decode tokens per second by category'});
-bars('c-conc',C.lv.map(l=>`${l} in flight`),C.aggR,C.aggA,500,[0,125,250,375,500],'AGGREGATE T/S',{aria:'Aggregate tokens per second by concurrency'});
-bars('c-pre',C.ptok.map(t=>`${t.toLocaleString('en-US')} tok`),C.ppR,C.ppA,6000,[0,1500,3000,4500,6000],'PREFILL T/S (MEDIAN)',{d:0,sub:['~2k target','~8k','~16k','~32k','~64k target'],aria:'Prefill tokens per second by depth'});
-document.getElementById('t-conc').innerHTML=`<tr><th>In flight</th><th>Radiance t/s per request</th><th>Deployed t/s per request</th><th>Radiance first token ms</th><th>Deployed first token ms</th></tr>`+
-  C.lv.map((l,i)=>`<tr><td>${l}</td><td>${fmt(C.prR[i])}</td><td>${fmt(C.prA[i])}</td><td>${fmt(C.ttcR[i])}</td><td>${fmt(C.ttcA[i])}</td></tr>`).join('');
-document.getElementById('t-ttft').innerHTML=`<tr><th>Category</th><th>Radiance first token ms</th><th>Deployed first token ms</th><th>Ratio</th></tr>`+
-  C.cats.map((c,i)=>`<tr><td>${c}</td><td>${fmt(C.ttR[i])}</td><td>${fmt(C.ttA[i])}</td><td>${(C.ttR[i]/C.ttA[i]).toFixed(2)}×</td></tr>`).join('');
+
+function hchart(c,W){
+  const refs=(c.refs||[]).slice().sort((a,b)=>b.v-a.v),bh=15,bg=5,hdr=25,gapR=16,L=2,PR=W-14,x=v=>L+v*(PR-L)/c.max;
+  let s=T(2,13,c.unit,'cap'),yy=22,topY=0,botY=0;
+  if(refs[0]){topY=yy+16;yy=topY+8;}
+  const rows=[];
+  c.labels.forEach((lab,i)=>{
+    const r0=yy,yR=r0+hdr,yA=yR+bh+bg; rows.push({r0,yR,yA,end:yA+bh,catEnd:2+tw(lab,FONT.catn)+(c.sub?10+tw(c.sub[i],FONT.sub):0)});
+    yy=yA+bh+gapR;
+  });
+  yy-=gapR;
+  if(refs[1]){botY=yy+22;yy=botY+6;}
+  const axisY=yy+8,H=axisY+20;
+  // grid, segmented per row so it never crosses a row's caption
+  rows.forEach(r=>{c.ticks.slice(1).forEach(t=>{s+=`<line class="grid" x1="${n1(x(t))}" x2="${n1(x(t))}" y1="${r.yR-3}" y2="${r.end+3}"/>`;});
+  });
+  // combined-score references: vertical dashed rules, labelled at their ends, broken where a caption would be crossed
+  refs.forEach((r,k)=>{
+    const xv=x(r.v),label=`${r.name} ${r.val}`,w=tw(label,FONT.ref);
+    let ax='middle',lx=xv; if(xv+w/2>W-2){ax='end';lx=W-2;} else if(xv-w/2<2){ax='start';lx=2;}
+    const yTop=k===0?topY+5:rows[0].yR-3, yBot=k===0?rows[rows.length-1].end+3:botY-14;
+    const segs=[]; let a=yTop;
+    rows.forEach(row=>{ if(row.r0>=a && row.yR-3<=yBot && row.catEnd+6>xv){segs.push([a,row.r0]); a=row.yR-3;} });
+    segs.push([a,yBot]);
+    segs.forEach(([y1,y2])=>{if(y2>y1)s+=`<line class="ref ob" x1="${n1(xv)}" x2="${n1(xv)}" y1="${n1(y1)}" y2="${n1(y2)}" stroke="${r.c}"/>`;});
+    s+=T(lx,k===0?topY:botY,label,'rl',ax,` fill="${r.c}"`);
+  });
+  c.labels.forEach((lab,i)=>{
+    const {r0,yR,yA}=rows[i],xr=x(c.R[i]),xa=x(c.A[i]),h=bh/2;
+    const bar=(xe,y0,g,id)=>`<path class="ob" data-id="${id}" d="M${L} ${y0}H${n1(xe-h)}A${h} ${h} 0 0 1 ${n1(xe-h)} ${y0+bh}H${L}Z" fill="url(#${g})" stroke="#0b0410" stroke-width="2"/>`;
+    s+=T(2,r0+16,lab,'catn')+(c.sub?T(tw(lab,FONT.catn)+10,r0+16,c.sub[i],'sub'):'');
+    s+=bar(xr,yR,'glassRh',`b${i}r`)+`<line class="lead" x1="${n1(L+(xr-L)*.3)}" x2="${n1(L+(xr-L)*.3)}" y1="${yR+1}" y2="${yR+bh-1}"/>`+bar(xa,yA,'glassAh',`b${i}a`);
+    s+=`<ellipse class="ob flk" cx="${n1(xr+5)}" cy="${yR+h}" rx="2.6" ry="${h+1.5}" fill="none" stroke="#f5c542" stroke-width="2" filter="url(#glow)" style="animation-delay:${(-i*.17).toFixed(2)}s"/>`;
+    s+=`<rect class="ob" x="${n1(xa+3)}" y="${yA+h-1}" width="4" height="${h+1}" fill="#fbefd5"/><ellipse class="ob flk" cx="${n1(xa+5)}" cy="${yA+h-4}" rx="2.4" ry="3.4" fill="#ffb02e"/>`;
+    [[xr,yR,c.R[i],`b${i}r`],[xa,yA,c.A[i],`b${i}a`]].forEach(([xe,y0,v,id])=>{
+      const str=fmt(v,c.d??1),w=tw(str,FONT.vin);
+      s+=(xe-L>=1.6*w+12)?T(xe-h-2,y0+h+4.3,str,'vin','end',` data-own="${id}"`):T(xe+13,y0+h+4.3,str,'vout ko vl','start');
+    });
+  });
+  c.ticks.forEach((t,j)=>{const a=j===0?'start':j===c.ticks.length-1?'end':'middle';s+=T(j===0?2:x(t),axisY+12,t.toLocaleString('en-US'),'tk',a);});
+  s+=`<line class="grid" x1="${L}" x2="${n1(PR)}" y1="${axisY-1}" y2="${axisY-1}"/>`;
+  return [H,s];
+}
+
+/* Value labels sit above their lancets; any that would touch a dashed reference rule, a halo,
+   a candle or another label is lifted clear of it. */
+function inkBox(t){const b=t.getBBox(),cs=getComputedStyle(t);MC.font=`${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  const m=MC.measureText(t.textContent),y=+t.getAttribute('y');return {x:b.x,y:y-m.actualBoundingBoxAscent,w:b.width,h:m.actualBoundingBoxAscent+m.actualBoundingBoxDescent};}
+function elBox(e){const b=e.getBBox(),sw=parseFloat(getComputedStyle(e).strokeWidth)||0;return {x:b.x-sw/2,y:b.y-sw/2,w:b.width+sw,h:b.height+sw};}
+const hit=(a,b,p)=>a.x<b.x+b.w+p&&b.x<a.x+a.w+p&&a.y<b.y+b.h+p&&b.y<a.y+a.h+p;
+function liftLabels(svg){
+  const obs=[...svg.querySelectorAll('.ob')].map(elBox),placed=[];
+  svg.querySelectorAll('.vl').forEach(t=>{
+    for(let k=0;k<12;k++){const b=inkBox(t),o=[...obs,...placed].find(o=>hit(b,o,2.5)); if(!o)break; t.setAttribute('y',n1(+t.getAttribute('y')-((b.y+b.h)-o.y)-3.5));}
+    placed.push(inkBox(t));
+  });
+}
+let lastW=-1;
+function renderCharts(force){
+  const W=Math.floor(document.getElementById(CHARTS[0].el).clientWidth); if(!W||(!force&&W===lastW))return; lastW=W;
+  const wide=CHARTS.every(c=>wideOK(c,W));
+  CHARTS.forEach(c=>{const host=document.getElementById(c.el),[H,body]=(wide?vchart:hchart)(c,W);
+    host.innerHTML=svgWrap(W,H,c.aria,body); host.dataset.mode=wide?'wide':'narrow'; liftLabels(host.firstElementChild);});
+}
+renderCharts(true);
+let rsz=0; addEventListener('resize',()=>{clearTimeout(rsz);rsz=setTimeout(()=>renderCharts(false),150);});
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>renderCharts(true));
 
 // Synthesized monk choir: sawtooth voices through "ah" formant filters, a slow modal chant, and a generated cathedral reverb.
 let ctx=null, master=null, timer=null;
@@ -209,12 +395,13 @@ function startChoir(){
 const btn=document.getElementById('choir'), hint=document.getElementById('choir-hint');
 let muted=false, noChoir=false;
 const UNLOCK=['pointerdown','keydown','touchstart','wheel','scroll'];
+function setAwait(on){btn.classList.toggle('await',on); hint.classList.toggle('off',!on); hint.setAttribute('aria-hidden',on?'false':'true');}
 function render(){
-  if(noChoir){btn.textContent='This browser has no choir'; hint.hidden=true; return;}
+  if(noChoir){btn.textContent='This browser has no choir'; setAwait(false); return;}
   const playing=!!ctx && ctx.state==='running' && !muted;
   btn.textContent=playing?'♱ Silence the choir':'♱ Summon the choir';
   btn.setAttribute('aria-pressed',playing?'true':'false');
-  hint.hidden=!(ctx && !muted && ctx.state!=='running');
+  setAwait(!!(ctx && !muted && ctx.state!=='running'));
 }
 function ensureCtx(){
   if(ctx||noChoir) return !!ctx;
